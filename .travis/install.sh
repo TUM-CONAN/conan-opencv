@@ -23,5 +23,3 @@ pip install conan --upgrade
 pip install conan_package_tools
 
 conan user
-# temporary fix to build (github ssl verification error)
-git config --global http.sslverify false
