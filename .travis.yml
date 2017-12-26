@@ -22,17 +22,17 @@ osx: &osx
 matrix:
    include:
       - <<: *osx
-        osx_image: xcode8.3
-        env: CONAN_APPLE_CLANG_VERSIONS=8.3 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=1
+        osx_image: xcode9
+        env: CONAN_APPLE_CLANG_VERSIONS=9.0 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=1
       - <<: *osx
-        osx_image: xcode8.3
-        env: CONAN_APPLE_CLANG_VERSIONS=8.3 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=2
+        osx_image: xcode9
+        env: CONAN_APPLE_CLANG_VERSIONS=9.0 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=2
       - <<: *osx
-        osx_image: xcode8.3
-        env: CONAN_APPLE_CLANG_VERSIONS=8.3 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=3
+        osx_image: xcode9
+        env: CONAN_APPLE_CLANG_VERSIONS=9.0 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=3
       - <<: *osx
-        osx_image: xcode8.3
-        env: CONAN_APPLE_CLANG_VERSIONS=8.3 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=4
+        osx_image: xcode9
+        env: CONAN_APPLE_CLANG_VERSIONS=9.0 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=4
       - <<: *linux
         env: CONAN_GCC_VERSIONS=4.9 CONAN_DOCKER_IMAGE=lasote/conangcc49 CONAN_TOTAL_PAGES=4 CONAN_CURRENT_PAGE=1
       - <<: *linux
