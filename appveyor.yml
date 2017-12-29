@@ -4,7 +4,8 @@ environment:
     PYTHON_VERSION: "3.6.3"
     PYTHON_ARCH: "64"
     
-    CONAN_UPLOAD: "https://api.bintray.com/conan/tum-ubitrack/public-conan"
+    CONAN_UPLOAD: "https://api.bintray.com/conan/tum-ubitrack-deps/public-conan"
+    CONAN_REMOTES: "https://api.bintray.com/conan/tum-ubitrack-deps/public-conan"
     CONAN_REFERENCE: "opencv/3.2.0"
     CONAN_USERNAME: "ulricheck"
     CONAN_CHANNEL: "stable"
