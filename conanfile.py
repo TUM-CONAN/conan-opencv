@@ -25,6 +25,8 @@ class OpenCVConan(ConanFile):
         cmake = CMake(self)
         cmake_options = {
             "CMAKE_INSTALL_PREFIX": "install",
+            "PYTHON_PACKAGES_PATH": os.path.join("install", "lib", "python2"),
+            "PYTHON3_PACKAGES_PATH": os.path.join("install", "lib", "python3"),
             "WITH_OPENXL": False,
             "WITH_IPP": True,
             "WITH_QT": False,
