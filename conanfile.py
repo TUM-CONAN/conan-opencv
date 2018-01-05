@@ -128,12 +128,20 @@ class OpenCVConan(ConanFile):
             "pthread",
             "dl" # GCC wants this last
         ]
+        libs_macos = [
+            "ippicv",
+            "pthread",
+            "dl" # GCC wants this last
+        ]
         if self.settings.compiler == "Visual Studio":
             debug_suffix = ("d" if self.settings.build_type=="Debug" else "")
             libs_opencv_win = [n + self.opencv_version_suffix + debug_suffix for n in libs_opencv]
             libs_3rdparty_win = [n + debug_suffix for n in libs_3rdparty]
             libs = libs_opencv_win + libs_3rdparty_win + libs_win
             self.cpp_info.libs.extend(libs)
-        elif self.settings.compiler == "gcc":
+        elif self.settings.os == "Linux":
             libs = libs_opencv + libs_3rdparty + libs_linux
+            self.cpp_info.libs.extend(libs)
+        elif self.settings.os == "Macos":
+            libs = libs_opencv + libs_3rdparty + libs_macos
             self.cpp_info.libs.extend(libs)
