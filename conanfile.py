@@ -95,7 +95,7 @@ class OpenCVConan(ConanFile):
 
         if self.settings.os == "Macos":
             self.copy(pattern="*.a", dst="lib", src="3rdparty/lib", keep_path=False)
-            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_lnx/lib/intel64", keep_path=False)
+            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_osx/lib", keep_path=False)
             self.copy(pattern="*.a", dst="lib", src="install", keep_path=False)
             self.copy(pattern="*.dylib*", dst="lib", src="install", keep_path=False)
 
