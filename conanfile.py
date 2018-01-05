@@ -93,6 +93,12 @@ class OpenCVConan(ConanFile):
             self.copy(pattern="*.a", dst="lib", src="install", keep_path=False)
             self.copy(pattern="*.so*", dst="lib", src="install", keep_path=False)
 
+        if self.settings.os == "Macos":
+            self.copy(pattern="*.a", dst="lib", src="3rdparty/lib", keep_path=False)
+            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_lnx/lib/intel64", keep_path=False)
+            self.copy(pattern="*.a", dst="lib", src="install", keep_path=False)
+            self.copy(pattern="*.dylib*", dst="lib", src="install", keep_path=False)
+
     def package_info(self):
         libs_opencv = [
             "opencv_calib3d",
