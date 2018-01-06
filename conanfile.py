@@ -103,6 +103,7 @@ class OpenCVConan(ConanFile):
         libs_opencv = [
             "opencv_calib3d",
             "opencv_flann",
+            "opencv_features2d",
             "opencv_highgui",
             "opencv_imgcodecs",
             "opencv_imgproc",
