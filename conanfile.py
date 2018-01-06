@@ -100,6 +100,8 @@ class OpenCVConan(ConanFile):
             self.copy(pattern="*.dylib*", dst="lib", src="install", keep_path=False)
 
     def package_info(self):
+        self.cpp_info.defines.append("HAVE_OPENCV")
+        
         libs_opencv = [
             "opencv_calib3d",
             "opencv_flann",
