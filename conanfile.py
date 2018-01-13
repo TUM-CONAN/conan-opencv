@@ -19,7 +19,7 @@ class OpenCVConan(ConanFile):
 
     def source(self):
         source_url = "https://github.com/opencv/opencv/archive/{0}.tar.gz".format(self.version)
-        archive_name = "opencv-{0}.tar.gz".format(self.version)
+        archive_name = "opencv-{0}".format(self.version)
         tools.get(source_url)
         os.rename(archive_name, "opencv")
 
