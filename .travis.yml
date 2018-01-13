@@ -2,11 +2,11 @@
 env:
    global:
      - CONAN_REFERENCE: "opencv/3.2.0"
-     - CONAN_USERNAME: "ulricheck"
-     - CONAN_LOGIN_USERNAME: "ulricheck"
+     - CONAN_USERNAME: "camposs"
+     - CONAN_LOGIN_USERNAME: "camposs"
      - CONAN_CHANNEL: "stable"
-     - CONAN_UPLOAD: "https://api.bintray.com/conan/tum-ubitrack-deps/public-conan"
-     - CONAN_REMOTES: "https://api.bintray.com/conan/tum-ubitrack-deps/public-conan"
+     - CONAN_UPLOAD: "https://conan.campar.in.tum.de"
+     - CONAN_REMOTES: "https://conan.campar.in.tum.de"
      - CONAN_STABLE_BRANCH_PATTERN: "release/*"
      - CONAN_UPLOAD_ONLY_WHEN_STABLE: 1 # Will only upload when the branch matches "release/*"
 

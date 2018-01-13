@@ -2,8 +2,6 @@
 
 [Conan.io](https://conan.io) package for opencv library. 
 
-The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/opencv/3.2.0/ulricheck/stable).
-
 ## Build packages
 
     $ pip install conan_package_tools
@@ -11,20 +9,20 @@ The packages generated with this **conanfile** can be found in [conan.io](https:
     
 ## Upload packages to server
 
-    $ conan upload opencv/3.2.0@ulricheck/stable --all
+    $ conan upload opencv/3.2.0@camposs/stable --all
     
 ## Reuse the packages
 
 ### Basic setup
 
-    $ conan install opencv/3.2.0@ulricheck/stable
+    $ conan install opencv/3.2.0@camposs/stable
     
 ### Project setup
 
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
     
     [requires]
-    opencv/3.2.0@ulricheck/stable
+    opencv/3.2.0@camposs/stable
 
     [options]
     opencv:shared=true # false

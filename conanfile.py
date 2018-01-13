@@ -18,8 +18,10 @@ class OpenCVConan(ConanFile):
     short_paths = True
 
     def source(self):
-        self.run("git clone https://github.com/opencv/opencv.git")
-        self.run("cd opencv && git checkout tags/3.2.0")
+        source_url = "https://github.com/opencv/opencv/archive/{0}.tar.gz".format(self.version)
+        archive_name = "opencv-{0}.tar.gz".format(self.version)
+        tools.get(source_url)
+        os.rename(archive_name, "opencv")
 
     def build(self):
         cmake = CMake(self)
