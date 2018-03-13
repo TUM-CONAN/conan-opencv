@@ -5,8 +5,8 @@ class OpenCVConan(ConanFile):
     # Description must be very short for conan.io
     description = "OpenCV: Open Source Computer Vision Library."
     name = "opencv"
-    version = "3.2.0"
-    opencv_version_suffix = "320"
+    version = "3.4.1"
+    opencv_version_suffix = "341"
     settings = "os", "compiler", "build_type", "arch"
     options = {
         "shared": [True, False]
@@ -27,8 +27,8 @@ class OpenCVConan(ConanFile):
         cmake = CMake(self)
         cmake_options = {
             "CMAKE_INSTALL_PREFIX": "install",
-            "PYTHON_PACKAGES_PATH": os.path.join("install", "lib", "python2"),
-            "PYTHON3_PACKAGES_PATH": os.path.join("install", "lib", "python3"),
+            #"PYTHON_PACKAGES_PATH": os.path.join("install", "lib", "python2"),
+            #"PYTHON3_PACKAGES_PATH": os.path.join("install", "lib", "python3"),
             "WITH_OPENXL": False,
             "WITH_IPP": True,
             "WITH_QT": False,
@@ -71,7 +71,9 @@ class OpenCVConan(ConanFile):
             "BUILD_opencv_ts": True,
             "BUILD_opencv_video": True,
             "BUILD_opencv_videoio": True,
-            "BUILD_opencv_videostab": True
+            "BUILD_opencv_videostab": True,
+            "BUILD_opencv_python2": False,
+            "BUILD_opencv_python3": False,
         }
 
         if self.settings.compiler == "Visual Studio":
