@@ -95,7 +95,7 @@ class OpenCVConan(ConanFile):
         }
 
         if self.options.with_contrib:
-            cmake_options["OPENCV_EXTRA_MODULES_PATH"] = os.path.join("..", "opencv_contrib", "modules")
+            cmake_options["OPENCV_EXTRA_MODULES_PATH"] = os.path.join(self.source_folder, "opencv_contrib", "modules")
 
         if self.settings.compiler == "Visual Studio":
             cmake_options["BUILD_WITH_STATIC_CRT"] = self.settings.compiler.runtime in ["MT","MTd"]
@@ -145,6 +145,42 @@ class OpenCVConan(ConanFile):
             "opencv_videostab",
             "opencv_core" # GCC wants this last
         ]
+
+        if self.options.with_contrib:
+            libs_opencv.extend([
+                "opencv_aruco",
+                "opencv_bgsegm",
+                "opencv_bioinspired",
+                "opencv_ccalib",
+                "opencv_dnn",
+                "opencv_dnn_objdetect",
+                "opencv_dpm",
+                "opencv_face",
+                "opencv_freetype",
+                "opencv_fuzzy",
+                "opencv_hdf",
+                "opencv_hfs",
+                "opencv_img_hash",
+                "opencv_line_descriptor",
+                "opencv_optflow",
+                "opencv_phase_unwrapping",
+                "opencv_plot",
+                "opencv_reg",
+                "opencv_rgbd",
+                "opencv_saliency",
+                "opencv_sfm",
+                "opencv_stereo",
+                "opencv_structured_light",
+                "opencv_surface_matching",
+                "opencv_text",
+                "opencv_tracking",
+                "opencv_ts",
+                "opencv_xfeatures2d",
+                "opencv_ximgproc",
+                "opencv_xobjdetect",
+                "opencv_xphoto",
+                ])
+
         libs_3rdparty = [
             "zlib",
             "libjpeg",
