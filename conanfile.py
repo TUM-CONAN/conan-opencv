@@ -9,9 +9,10 @@ class OpenCVConan(ConanFile):
     opencv_version_suffix = "341"
     settings = "os", "compiler", "build_type", "arch"
     options = {
-        "shared": [True, False]
+        "shared": [True, False],
+        "with_contrib": [True, False],
     }
-    default_options = "shared=False"
+    default_options = "shared=False", "with_contrib=True"
     url = "https://github.com/ulricheck/conan-opencv"
     license = "http://http://opencv.org/license.html"
     generators = "cmake"
@@ -22,6 +23,13 @@ class OpenCVConan(ConanFile):
         archive_name = "opencv-{0}".format(self.version)
         tools.get(source_url)
         os.rename(archive_name, "opencv")
+
+        if self.options.with_contrib:
+            source_url = "https://github.com/opencv/opencv_contrib/archive/{0}.tar.gz".format(self.version)
+            archive_name = "opencv_contrib-{0}".format(self.version)
+            tools.get(source_url)
+            os.rename(archive_name, "opencv_contrib")
+
 
     def build(self):
         cmake = CMake(self)
@@ -76,6 +84,9 @@ class OpenCVConan(ConanFile):
             "BUILD_opencv_python3": False,
         }
 
+        if self.options.with_contrib:
+            self.cmake_options["OPENCV_EXTRA_MODULES_PATH"] =os.path.join("..", "opencv_contrib", "modules")
+            
         if self.settings.compiler == "Visual Studio":
             cmake_options["BUILD_WITH_STATIC_CRT"] = self.settings.compiler.runtime in ["MT","MTd"]
         cmake.configure(defs=cmake_options, source_dir="opencv")
