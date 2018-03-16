@@ -130,7 +130,7 @@ class OpenCVConan(ConanFile):
     core_modules = [
         "calib3d", "flann", "features2d", "highgui", "imgcodecs", "imgproc", "ml", 
         "objdetect", "photo", "shape", "stitching", "superres", "video", "videoio", 
-        "videostab", "viz" "core",
+        "videostab", "viz", "core",
         ]
 
     contrib_modules = [
@@ -291,7 +291,7 @@ class OpenCVConan(ConanFile):
         for name in self.contrib_modules + self.core_modules:
             libname = "opencv_%s" % name
             for ln in compiled_libs:
-                if libname in ln:
+                if (libname in ln) and (libname not in libs_opencv):
                     libs_opencv.append(libname)
 
         libs_3rdparty = [
