@@ -174,7 +174,6 @@ class OpenCVConan(ConanFile):
                 "opencv_surface_matching",
                 "opencv_text",
                 "opencv_tracking",
-                "opencv_ts",
                 "opencv_xfeatures2d",
                 "opencv_ximgproc",
                 "opencv_xobjdetect",
