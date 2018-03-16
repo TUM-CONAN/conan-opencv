@@ -11,8 +11,18 @@ class OpenCVConan(ConanFile):
     options = {
         "shared": [True, False],
         "with_contrib": [True, False],
+        "with_cuda": [True, False],
+        "with_qt": [True, False],
+        "with_tbb": [True, False],
     }
-    default_options = "shared=False", "with_contrib=True"
+    default_options = (
+        "shared=False", 
+        "with_contrib=True", 
+        "with_cuda=False",
+        "with_qt=False",
+        "with_tbb=False",
+        )
+
     url = "https://github.com/ulricheck/conan-opencv"
     license = "http://http://opencv.org/license.html"
     generators = "cmake"
@@ -39,10 +49,10 @@ class OpenCVConan(ConanFile):
             #"PYTHON3_PACKAGES_PATH": os.path.join("install", "lib", "python3"),
             "WITH_OPENXL": False,
             "WITH_IPP": True,
-            "WITH_QT": False,
+            "WITH_QT": self.options.with_qt,
             "WITH_GTK": False,
             "WITH_OPENGL": True,
-            "WITH_CUDA": False,
+            "WITH_CUDA": self.options.with_cuda,
             "WITH_JPEG": True,
             "BUILD_JPEG": True,
             "WITH_PNG": True,
@@ -53,8 +63,8 @@ class OpenCVConan(ConanFile):
             "BUILD_ZLIB": True,
             "WITH_TIFF": True,
             "BUILD_TIFF": True,
-            "WITH_TBB": False,
-            "BUILD_TBB": False,
+            "WITH_TBB": self.options.with_tbb,
+            "BUILD_TBB": self.options.with_tbb,
             "WITH_OPENEXR": True,
             "BUILD_OPENEXR": True,
             "WITH_WEBP": True,
@@ -85,8 +95,8 @@ class OpenCVConan(ConanFile):
         }
 
         if self.options.with_contrib:
-            self.cmake_options["OPENCV_EXTRA_MODULES_PATH"] =os.path.join("..", "opencv_contrib", "modules")
-            
+            cmake_options["OPENCV_EXTRA_MODULES_PATH"] = os.path.join("..", "opencv_contrib", "modules")
+
         if self.settings.compiler == "Visual Studio":
             cmake_options["BUILD_WITH_STATIC_CRT"] = self.settings.compiler.runtime in ["MT","MTd"]
         cmake.configure(defs=cmake_options, source_dir="opencv")
