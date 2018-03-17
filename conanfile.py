@@ -304,6 +304,7 @@ class OpenCVConan(ConanFile):
                 if (libname in ln) and (libname not in libs_opencv):
                     libs_opencv.append(libname)
 
+        # can we distinguish which libraries are needed for shared vs. static linking?
         libs_3rdparty = [
             "zlib",
             "libjpeg",
@@ -318,11 +319,15 @@ class OpenCVConan(ConanFile):
         ]
         libs_linux = [
             "ippicv",
+            "ippiw",
+            "ittnotify",
             "pthread",
             "dl" # GCC wants this last
         ]
         libs_macos = [
             "ippicv",
+            "ippiw",
+            "ittnotify",
             "pthread",
             "dl" # GCC wants this last
         ]
