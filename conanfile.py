@@ -313,22 +313,18 @@ class OpenCVConan(ConanFile):
             "libtiff",
             "libwebp",
             "IlmImf"
+            "ittnotify",
+            "ippiw",
         ]
         libs_win = [
             "ippicvmt",
-            "ittnotify",
-            "ippiw",
         ]
         libs_linux = [
-            "ittnotify",
-            "ippiw",
             "ippicv",
             "pthread",
             "dl" # GCC wants this last
         ]
         libs_macos = [
-            "ittnotify",
-            "ippiw",
             "ippicv",
             "pthread",
             "dl" # GCC wants this last
