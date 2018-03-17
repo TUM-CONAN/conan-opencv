@@ -9,6 +9,6 @@ if __name__ == "__main__":
     builder.builds = [
         [settings, options, env_vars, build_requires]
         for settings, options, env_vars, build_requires in builder.builds
-        if (not (os_info.is_macos and options['opencv:shared'] == False))
+        if (not ((os_info.is_macos or os_info.is_windows) and options['opencv:shared'] == False))
     ]
     builder.run()
