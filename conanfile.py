@@ -284,7 +284,15 @@ class OpenCVConan(ConanFile):
             self.copy(pattern="*.dylib*", dst="lib", src="install", keep_path=False)
 
     def package_info(self):
+        # set environment variables
         self.cpp_info.defines.append("HAVE_OPENCV")
+        if self.options.shared:
+            if self.settings.os == "Macos":
+                self.env_info.DYLD_LIBRARY_PATH.append(os.path.join(self.package_folder, "lib"))
+            if self.settings.os == "Linux":
+                self.env_info.LD_LIBRARY_PATH.append(os.path.join(self.package_folder, "lib"))
+
+        # collect installed libraries and specify linking order explicitly
         compiled_libs = tools.collect_libs(self) 
         libs_opencv = []
 
