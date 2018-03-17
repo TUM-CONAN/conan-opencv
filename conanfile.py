@@ -11,6 +11,7 @@ class OpenCVConan(ConanFile):
     options = {
         "shared": [True, False],
         "with_cuda": [True, False],
+        "with_opengl": [True, False],
         "with_qt": [True, False],
         "with_tbb": [True, False],
         "with_calib3d": [True, False],
@@ -68,6 +69,7 @@ class OpenCVConan(ConanFile):
     default_options = (
         "shared=False", 
         "with_cuda=False",
+        "with_opengl=False",
         "with_qt=False",
         "with_tbb=False",
         "with_calib3d=True",
@@ -170,7 +172,7 @@ class OpenCVConan(ConanFile):
             "WITH_IPP": True,
             "WITH_QT": self.options.with_qt,
             "WITH_GTK": False,
-            "WITH_OPENGL": True,
+            "WITH_OPENGL": self.options.with_opengl, # @TODO TestPackage might fail due to missing OpenGL
             "WITH_CUDA": self.options.with_cuda,
             "WITH_JPEG": True,
             "BUILD_JPEG": True,
