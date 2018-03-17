@@ -312,7 +312,7 @@ class OpenCVConan(ConanFile):
             "libjasper",
             "libtiff",
             "libwebp",
-            "IlmImf"
+            "IlmImf",
             "ittnotify",
             "ippiw",
         ]
