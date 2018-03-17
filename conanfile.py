@@ -315,7 +315,7 @@ class OpenCVConan(ConanFile):
             "IlmImf"
         ]
         libs_win = [
-            "ippicvmt"
+            "ippicvmt",
             "ittnotify",
             "ippiw",
         ]
