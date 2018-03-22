@@ -80,7 +80,7 @@ class OpenCVConan(ConanFile):
         "with_imgproc=True",
         "with_ml=True",
         "with_objectdetect=True",
-        "with_photo=False",
+        "with_photo=True",
         "with_shape=False",
         "with_stitching=False",
         "with_superres=False",
