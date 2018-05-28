@@ -5,8 +5,8 @@ env:
      - CONAN_USERNAME: "camposs"
      - CONAN_LOGIN_USERNAME: "camposs"
      - CONAN_CHANNEL: "stable"
-     - CONAN_UPLOAD: "https://conan.campar.in.tum.de"
-     - CONAN_REMOTES: "https://conan.campar.in.tum.de"
+     - CONAN_UPLOAD: "https://conan.campar.in.tum.de/api/conan/conan-camposs"
+     - CONAN_REMOTES: "https://conan.campar.in.tum.de/api/conan/conan-camposs"
      - CONAN_STABLE_BRANCH_PATTERN: "release/*"
      - CONAN_UPLOAD_ONLY_WHEN_STABLE: 1 # Will only upload when the branch matches "release/*"
 
