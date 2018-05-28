@@ -8,7 +8,7 @@ if __name__ == "__main__":
     # @todo macos static builds need opencl/lapack linking to make test_package work 
     builder.builds = [
         [settings, options, env_vars, build_requires]
-        for settings, options, env_vars, build_requires in builder.builds
+        for settings, options, env_vars, build_requires in builder.items
         if (not ((os_info.is_macos or os_info.is_windows) and options['opencv:shared'] == False))
     ]
     builder.run()
