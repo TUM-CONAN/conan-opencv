@@ -266,16 +266,18 @@ class OpenCVConan(ConanFile):
     def package(self):
         self.copy(pattern="*.h*", dst="include", src =os.path.join("install", "include"), keep_path=True)
 
+        arch_name = "intel64" if self.settings["arch"] == "x86_64" else "ia32"
+
         if self.settings.os == "Windows":
             self.copy(pattern="*.lib", dst="lib", src="3rdparty\\lib", keep_path=False)
-            self.copy(pattern="*.lib", dst="lib", src="3rdparty\\ippicv\\ippicv_win\\lib\\intel64", keep_path=False)
+            self.copy(pattern="*.lib", dst="lib", src="3rdparty\\ippicv\\ippicv_win\\lib\\%s" % arch_name, keep_path=False)
             self.copy(pattern="*.lib", dst="lib", src="install", keep_path=False)
             self.copy(pattern="*.dll", dst="bin", src="bin", keep_path=False)
             self.copy(pattern="*.exe", dst="bin", src="bin", keep_path=False)
 
         if self.settings.os == "Linux":
             self.copy(pattern="*.a", dst="lib", src="3rdparty/lib", keep_path=False)
-            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_lnx/lib/intel64", keep_path=False)
+            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_lnx/lib/%s" % arch_name, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src="install", keep_path=False)
             self.copy(pattern="*.so*", dst="lib", src="install", keep_path=False)
 
