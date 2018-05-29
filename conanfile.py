@@ -266,7 +266,7 @@ class OpenCVConan(ConanFile):
     def package(self):
         self.copy(pattern="*.h*", dst="include", src =os.path.join("install", "include"), keep_path=True)
 
-        arch_name = "intel64" if self.settings["arch"] == "x86_64" else "ia32"
+        arch_name = "intel64" if self.settings.arch == "x86_64" else "ia32"
 
         if self.settings.os == "Windows":
             self.copy(pattern="*.lib", dst="lib", src="3rdparty\\lib", keep_path=False)
