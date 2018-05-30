@@ -91,7 +91,7 @@ class OpenCVConan(ConanFile):
         "with_viz=False",
         "with_python2=False",
         "with_python3=False",
-        "with_aruco=False",
+        "with_aruco=True",
         "with_bgsegm=False",
         "with_bioinspired=False",
         "with_ccalib=False",
