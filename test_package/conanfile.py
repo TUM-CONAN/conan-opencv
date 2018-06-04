@@ -19,10 +19,10 @@ class TestPackageConan(ConanFile):
         if self.settings.os == "Windows":
             bin_path += '.exe'
         try:
-        	if self.settings.os == "Macos":
-        		self.run('DYLD_LIBRARY_PATH=%s:%s' % (os.environ['DYLD_LIBRARY_PATH'], bin_path))
-        	else:
-    	        self.run(bin_path)
+            if self.settings.os == "Macos":
+                self.run('DYLD_LIBRARY_PATH=%s:%s' % (os.environ['DYLD_LIBRARY_PATH'], bin_path))
+            else:
+                self.run(bin_path)
         except Exception as e:
             self.output.warn("Test failed with error: %s" % e)
             self.output.info("current path: %s " % os.path.abspath(os.curdir))
