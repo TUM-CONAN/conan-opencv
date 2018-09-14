@@ -309,7 +309,7 @@ class OpenCVConan(ConanFile):
         # can we distinguish which libraries are needed for shared vs. static linking?
         libs_3rdparty = [
             "zlib",
-            "libjpeg",
+            "libjpeg-turbo",
             "libpng",
             "libjasper",
             "libtiff",
