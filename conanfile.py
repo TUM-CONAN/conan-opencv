@@ -339,6 +339,11 @@ class OpenCVConan(ConanFile):
             self.cpp_info.libs.extend(libs)
         elif self.settings.os == "Linux":
             libs = libs_opencv + libs_3rdparty + libs_linux
+            # intel performance primitives are only available on x86 and x86_64
+            if self.settings.arch not in ['x86', 'x86_64']:
+                libs.remove("ippicv")
+                libs.remove("ittnotify")
+                libs.remove("ippiw")
             self.cpp_info.libs.extend(libs)
         elif self.settings.os == "Macos":
             libs = libs_opencv + libs_3rdparty + libs_macos
