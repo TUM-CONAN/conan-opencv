@@ -150,6 +150,8 @@ class OpenCVConan(ConanFile):
             self.requires("Qt/[>=5.7.0]@camposs/stable")
         if self.options.with_viz:
             self.requires("vtk/[>=8.0.0]@camposs/stable")
+        if self.options.with_cuda:
+            self.requires("cuda_dev_config/[>=1.0]@camposs/stable")
 
     def source(self):
         source_url = "https://github.com/opencv/opencv/archive/{0}.tar.gz".format(self.version)
@@ -197,6 +199,9 @@ class OpenCVConan(ConanFile):
             "BUILD_PERF_TESTS": False,
             "BUILD_opencv_apps": False,
             "CPACK_BINARY_NSIS": False,
+
+            # temporary .. doesn work on linux/cuda10
+            "BUILD_opencv_cudacodec": False,
 
             "BUILD_opencv_calib3d": self.options.with_calib3d,
             "BUILD_opencv_features2d": self.options.with_features2d,
