@@ -282,20 +282,20 @@ class OpenCVConan(ConanFile):
 
         if self.settings.os == "Windows":
             self.copy(pattern="*.lib", dst="lib", src="3rdparty\\lib", keep_path=False)
-            self.copy(pattern="*.lib", dst="lib", src="3rdparty\\ippicv\\ippicv_win\\lib\\%s" % arch_name, keep_path=False)
+            self.copy(pattern="*.lib", dst="lib", src="3rdparty\\ippicv\\ippicv_win\\icv\\lib\\%s" % arch_name, keep_path=False)
             self.copy(pattern="*.lib", dst="lib", src="install", keep_path=False)
             self.copy(pattern="*.dll", dst="bin", src="bin", keep_path=False)
             self.copy(pattern="*.exe", dst="bin", src="bin", keep_path=False)
 
         if self.settings.os == "Linux":
             self.copy(pattern="*.a", dst="lib", src="3rdparty/lib", keep_path=False)
-            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_lnx/lib/%s" % arch_name, keep_path=False)
+            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_lnx/icv/lib/%s" % arch_name, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src="install", keep_path=False)
             self.copy(pattern="*.so*", dst="lib", src="install", keep_path=False)
 
         if self.settings.os == "Macos":
             self.copy(pattern="*.a", dst="lib", src="3rdparty/lib", keep_path=False)
-            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_mac/lib", keep_path=False)
+            self.copy(pattern="*.a", dst="lib", src="3rdparty/ippicv/ippicv_mac/icv/lib", keep_path=False)
             self.copy(pattern="*.a", dst="lib", src="install", keep_path=False)
             self.copy(pattern="*.dylib*", dst="lib", src="install", keep_path=False)
 
@@ -321,8 +321,9 @@ class OpenCVConan(ConanFile):
         if self.options.with_cuda:
             for name in self.cuda_modules:
                 libname = "opencv_%s" % name
-                if (libname in ln) and (libname not in libs_opencv):
-                    libs_opencv.append(libname)
+                for ln in compiled_libs:
+                    if (libname in ln) and (libname not in libs_opencv):
+                        libs_opencv.append(libname)
 
         # can we distinguish which libraries are needed for shared vs. static linking?
         libs_3rdparty = [
