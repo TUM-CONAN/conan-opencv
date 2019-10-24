@@ -5,7 +5,7 @@ class OpenCVConan(ConanFile):
     # Description must be very short for conan.io
     description = "OpenCV: Open Source Computer Vision Library."
     name = "opencv"
-    version = "3.4.3"
+    version = "3.4.8"
     opencv_version_suffix = version.replace(".","")
     settings = "os", "compiler", "build_type", "arch"
     options = {
@@ -136,6 +136,11 @@ class OpenCVConan(ConanFile):
         "objdetect", "photo", "shape", "stitching", "superres", "video", "videoio", 
         "videostab", "viz", "core",
         ]
+
+    cuda_modules = [
+        "cudaarithm", "cudabgsegm", "cudafeatures2d", "cudafilters", "cudaimgproc", 
+        "cudalegacy", "cudaobjdetect", "cudaoptflow", "cudastereo", "cudawarping", "cudev",
+    ]
 
     contrib_modules = [
         "aruco", "bgsegm", "bioinspired", "ccalib", "dnn", "dnn_objdetect", "dpm", 
@@ -310,6 +315,12 @@ class OpenCVConan(ConanFile):
         for name in self.contrib_modules + self.core_modules:
             libname = "opencv_%s" % name
             for ln in compiled_libs:
+                if (libname in ln) and (libname not in libs_opencv):
+                    libs_opencv.append(libname)
+
+        if self.options.with_cuda:
+            for name in self.cuda_modules:
+                libname = "opencv_%s" % name
                 if (libname in ln) and (libname not in libs_opencv):
                     libs_opencv.append(libname)
 
