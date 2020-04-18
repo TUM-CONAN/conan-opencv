@@ -152,7 +152,7 @@ class OpenCVConan(ConanFile):
 
     def requirements(self):
         if self.options.with_qt:
-            self.requires("Qt/[>=5.7.0]@camposs/stable")
+            self.requires("qt/5.12.4-r2@camposs/stable")
         if self.options.with_viz:
             self.requires("vtk/[>=8.0.0]@camposs/stable")
         if self.options.with_cuda:
