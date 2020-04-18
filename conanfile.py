@@ -5,7 +5,7 @@ class OpenCVConan(ConanFile):
     # Description must be very short for conan.io
     description = "OpenCV: Open Source Computer Vision Library."
     name = "opencv"
-    version = "3.4.8"
+    version = "3.4.10"
     opencv_version_suffix = version.replace(".","")
     settings = "os", "compiler", "build_type", "arch"
     options = {
@@ -152,7 +152,7 @@ class OpenCVConan(ConanFile):
 
     def requirements(self):
         if self.options.with_qt:
-            self.requires("Qt/[>=5.7.0]@camposs/stable")
+            self.requires("qt/5.12.4-r2@camposs/stable")
         if self.options.with_viz:
             self.requires("vtk/[>=8.0.0]@camposs/stable")
         if self.options.with_cuda:
@@ -173,6 +173,7 @@ class OpenCVConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
+        cmake.verbose = True
         cmake_options = {
             "CMAKE_INSTALL_PREFIX": "install",
             #"PYTHON_PACKAGES_PATH": os.path.join("install", "lib", "python2"),

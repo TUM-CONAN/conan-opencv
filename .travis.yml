@@ -1,7 +1,7 @@
 
 env:
    global:
-     - CONAN_REFERENCE: "opencv/3.4.8"
+     - CONAN_REFERENCE: "opencv/3.4.10"
      - CONAN_USERNAME: "camposs"
      - CONAN_LOGIN_USERNAME: "camposs"
      - CONAN_CHANNEL: "stable"
