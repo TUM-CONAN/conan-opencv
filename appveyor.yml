@@ -6,7 +6,7 @@ environment:
     
     CONAN_UPLOAD: "https://conan.campar.in.tum.de/api/conan/conan-camposs"
     CONAN_REMOTES: "https://conan.campar.in.tum.de/api/conan/conan-camposs"
-    CONAN_REFERENCE: "opencv/3.4.8"
+    CONAN_REFERENCE: "opencv/4.5.0"
     CONAN_USERNAME: "camposs"
     CONAN_CHANNEL: "stable"
     CONAN_STABLE_BRANCH_PATTERN: "release/*"
