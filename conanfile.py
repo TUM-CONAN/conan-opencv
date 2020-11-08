@@ -5,7 +5,7 @@ class OpenCVConan(ConanFile):
     # Description must be very short for conan.io
     description = "OpenCV: Open Source Computer Vision Library."
     name = "opencv"
-    version = "3.4.8"
+    version = "3.4.12"
     opencv_version_suffix = version.replace(".","")
     settings = "os", "compiler", "build_type", "arch"
     options = {
