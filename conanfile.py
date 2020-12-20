@@ -189,6 +189,8 @@ class OpenCVConan(ConanFile):
             "BUILD_PNG": True,
             "WITH_JASPER": True,
             "BUILD_JASPER": True,
+            "WITH_OPENJPEG": False,
+            "BUILD_OPENJPEG": False,
             "WITH_ZLIB": True,
             "BUILD_ZLIB": True,
             "WITH_TIFF": True,
