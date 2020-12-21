@@ -278,7 +278,11 @@ class OpenCVConan(ConanFile):
         return False
 
     def package(self):
-        self.copy(pattern="*.h*", dst="include", src =os.path.join("install", "include"), keep_path=True)
+        include_path = os.path.join("install", "include");
+        if self.settings.os == "Linux":
+            include_path = os.path.join("install","include","opencv4");
+
+        self.copy(pattern="*.h*", dst="include", src=include_path, keep_path=True)
 
         arch_name = "intel64" if self.settings.arch == "x86_64" else "ia32"
 
@@ -313,7 +317,6 @@ class OpenCVConan(ConanFile):
         # collect installed libraries and specify linking order explicitly
         compiled_libs = tools.collect_libs(self) 
         libs_opencv = []
-
         for name in self.contrib_modules + self.core_modules:
             libname = "opencv_%s" % name
             for ln in compiled_libs:
