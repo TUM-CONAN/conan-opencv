@@ -5,7 +5,7 @@ class OpenCVConan(ConanFile):
     # Description must be very short for conan.io
     description = "OpenCV: Open Source Computer Vision Library."
     name = "opencv"
-    version = "4.5.0"
+    version = "4.5.1"
     opencv_version_suffix = version.replace(".","")
     settings = "os", "compiler", "build_type", "arch"
     options = {
@@ -18,6 +18,7 @@ class OpenCVConan(ConanFile):
         "with_calib3d": [True, False],
         "with_features2d": [True, False],
         "with_flann": [True, False],
+        "with_ffmpeg": [True, False],
         "with_highgui": [True, False],
         "with_imgcodecs": [True, False],
         "with_imgproc": [True, False],
@@ -104,6 +105,7 @@ class OpenCVConan(ConanFile):
         "with_face=False",
         "with_freetype=False",
         "with_fuzzy=False",
+        "with_ffmpeg=False",
         "with_hdf=False",
         "with_hfs=False",
         "with_img_hash=False",
@@ -157,6 +159,17 @@ class OpenCVConan(ConanFile):
             self.requires("vtk/[>=8.0.0]@camposs/stable")
         if self.options.with_cuda:
             self.requires("cuda_dev_config/[>=1.0]@camposs/stable")
+        if self.options.get_safe("with_ffmpeg"):
+            self.requires("ffmpeg/4.4")
+            ffmpeg_modules = [
+                "ffmpeg::avcodec",
+                "ffmpeg::avfilter",
+                "ffmpeg::avformat",
+                "ffmpeg::avutil",
+                "ffmpeg::swresample",
+                "ffmpeg::swscale"
+            ]
+            self.core_modules += ffmpeg_modules
 
     def source(self):
         source_url = "https://github.com/opencv/opencv/archive/{0}.tar.gz".format(self.version)
@@ -179,6 +192,7 @@ class OpenCVConan(ConanFile):
             #"PYTHON3_PACKAGES_PATH": os.path.join("install", "lib", "python3"),
             "WITH_OPENXL": False,
             "WITH_IPP": True,
+            "WITH_FFMPEG": self.options.get_safe("with_ffmpeg"),
             "WITH_QT": self.options.with_qt,
             "WITH_GTK": self.options.with_gtk,
             "WITH_OPENGL": self.options.with_opengl, # @TODO TestPackage might fail due to missing OpenGL
@@ -262,6 +276,13 @@ class OpenCVConan(ConanFile):
             "BUILD_opencv_xobjdetect": self.options.with_xobjdetect,
             "BUILD_opencv_xphoto": self.options.with_xphoto,
         }
+        if self.options.get_safe("with_ffmpeg"):
+            cmake.definitions["OPENCV_FFMPEG_SKIP_BUILD_CHECK"] = True
+            cmake.definitions["OPENCV_FFMPEG_SKIP_DOWNLOAD"] = True
+            # opencv will not search for ffmpeg package, but for
+            # libavcodec;libavformat;libavutil;libswscale modules
+            cmake.definitions["OPENCV_FFMPEG_USE_FIND_PACKAGE"] = False
+            cmake.definitions["OPENCV_INSTALL_FFMPEG_DOWNLOAD_SCRIPT"] = False
 
         if self.need_contrib():
             cmake_options["OPENCV_EXTRA_MODULES_PATH"] = os.path.join(self.source_folder, "opencv_contrib", "modules")
