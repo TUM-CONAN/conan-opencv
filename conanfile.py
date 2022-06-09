@@ -5,7 +5,7 @@ class OpenCVConan(ConanFile):
     # Description must be very short for conan.io
     description = "OpenCV: Open Source Computer Vision Library."
     name = "opencv"
-    version = "4.5.1"
+    version = "4.5.5"
     opencv_version_suffix = version.replace(".","")
     settings = "os", "compiler", "build_type", "arch"
     options = {
@@ -154,11 +154,11 @@ class OpenCVConan(ConanFile):
 
     def requirements(self):
         if self.options.with_qt:
-            self.requires("qt/5.12.4-r2@camposs/stable")
+            self.requires("qt/5.15.4")
         if self.options.with_viz:
             self.requires("vtk/[>=8.0.0]@camposs/stable")
         if self.options.with_cuda:
-            self.requires("cuda_dev_config/[>=1.0]@camposs/stable")
+            self.requires("cuda_dev_config/2.0@camposs/stable")
         if self.options.get_safe("with_ffmpeg"):
             self.requires("ffmpeg/4.4")
             ffmpeg_modules = [
