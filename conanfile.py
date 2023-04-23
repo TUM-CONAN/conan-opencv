@@ -209,7 +209,9 @@ class OpenCVConan(ConanFile):
             self.requires("eigen/3.4.0")
         if self.options.get_safe("with_ffmpeg"):
             # opencv doesn't support ffmpeg >= 5.0.0 for the moment (until 4.5.5 at least)
-            self.requires("ffmpeg/4.4")
+            self.requires("ffmpeg/4.4.3")
+            # pulseaudio currently causes a conflict here
+            self.requires("openssl/1.1.1t", override=True)
         if self.options.parallel == "tbb":
             self.requires("onetbb/2021.7.0")
         if self.options.with_ipp == "intel-ipp":
@@ -382,8 +384,7 @@ class OpenCVConan(ConanFile):
             tc.variables["OPENCV_INSTALL_FFMPEG_DOWNLOAD_SCRIPT"] = False
             tc.variables["FFMPEG_LIBRARIES"] = "ffmpeg::avcodec;ffmpeg::avformat;ffmpeg::avutil;ffmpeg::swscale"
             for component in ["avcodec", "avformat", "avutil", "swscale", "avresample"]:
-                # TODO: use self.dependencies once https://github.com/conan-io/conan/issues/12728 fixed
-                ffmpeg_component_version = self.deps_cpp_info["ffmpeg"].components[component].version
+                ffmpeg_component_version = self.dependencies["ffmpeg"].cpp_info.components[component].get_property("component_version")
                 tc.variables[f"FFMPEG_lib{component}_VERSION"] = ffmpeg_component_version
 
         tc.variables["WITH_GSTREAMER"] = False
@@ -788,6 +789,8 @@ class OpenCVConan(ConanFile):
 
         add_components(self._opencv_components)
 
+        self.cpp_info.includedirs.append(os.path.join("include", "opencv4"))
+
         if self.settings.os == "Windows":
             self.cpp_info.components["opencv_highgui"].system_libs = ["comctl32", "gdi32", "ole32", "setupapi", "ws2_32", "vfw32"]
         elif self.settings.os == "Macos":
@@ -796,7 +799,4 @@ class OpenCVConan(ConanFile):
         elif self.settings.os == "iOS":
             self.cpp_info.components["opencv_videoio"].frameworks = ["AVFoundation", "QuartzCore"]
 
-        # TODO: to remove in conan v2 once cmake_find_package* generators removed
-        self.cpp_info.filenames["cmake_find_package"] = "OpenCV"
-        self.cpp_info.filenames["cmake_find_package_multi"] = "OpenCV"
 
