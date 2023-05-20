@@ -142,13 +142,13 @@ class OpenCVConan(ConanFile):
             del self.options.with_msmf
             del self.options.with_msmf_dxva
 
-        if self._has_with_ffmpeg_option:
-            # Following the packager choice, ffmpeg is enabled by default when
-            # supported, except on Android. See
-            # https://github.com/opencv/opencv/blob/39c3334147ec02761b117f180c9c4518be18d1fa/CMakeLists.txt#L266-L268
-            self.options.with_ffmpeg = self.settings.os != "Android"
-        else:
-            del self.options.with_ffmpeg
+        # if self._has_with_ffmpeg_option:
+        #     # Following the packager choice, ffmpeg is enabled by default when
+        #     # supported, except on Android. See
+        #     # https://github.com/opencv/opencv/blob/39c3334147ec02761b117f180c9c4518be18d1fa/CMakeLists.txt#L266-L268
+        #     self.options.with_ffmpeg = self.settings.os != "Android"
+        # else:
+        #     del self.options.with_ffmpeg
 
         if "arm" not in self.settings.arch:
             del self.options.neon
