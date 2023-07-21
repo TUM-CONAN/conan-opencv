@@ -20,7 +20,7 @@ required_conan_version = ">=1.54.0"
 
 class OpenCVConan(ConanFile):
     name = "opencv"
-    version = "4.5.5"
+    version = "4.8.0"
     license = "Apache-2.0"
     homepage = "https://opencv.org"
     description = "OpenCV (Open Source Computer Vision Library)"
@@ -84,7 +84,7 @@ class OpenCVConan(ConanFile):
         "with_eigen": True,
         "with_webp": True,
         "with_gtk": True,
-        "with_quirc": True,
+        "with_quirc": False,
         "with_cuda": False,
         "with_cublas": False,
         "with_cufft": False,
@@ -217,7 +217,7 @@ class OpenCVConan(ConanFile):
         if self.options.with_ipp == "intel-ipp":
             self.requires("intel-ipp/2020")
         if self.options.with_webp:
-            self.requires("libwebp/1.3.0")
+            self.requires("libwebp/1.3.1")
         if self.options.get_safe("contrib_freetype"):
             self.requires("freetype/2.12.1")
             self.requires("harfbuzz/6.0.0")
