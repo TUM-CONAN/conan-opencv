@@ -169,7 +169,7 @@ class OpenCVConan(ConanFile):
             del self.options.with_cublas
             del self.options.with_cudnn
             del self.options.with_cufft
-            del self.options.dnn_cuda
+            #del self.options.dnn_cuda
             del self.options.cuda_arch_bin
         if bool(self.options.with_jpeg):
             if self.options.get_safe("with_jpeg2000") == "jasper":
@@ -319,6 +319,11 @@ class OpenCVConan(ConanFile):
             if(NOT GLOG_LIBRARIES AND TARGET glog::glog)
               set(GLOG_LIBRARIES glog::glog)
             endif()""")
+        if self.settings.os == "WindowsStore":
+            replace_in_file(self, os.path.join(self.source_folder, "cmake", "OpenCVFindLibsGrfmt.cmake"), "if(ANDROID)", "if(0)")
+            replace_in_file(self, os.path.join(self.source_folder, "cmake", "OpenCVFindLibsGrfmt.cmake"), "if(ZLIB_FOUND AND ANDROID)", "if(0)")
+
+
 
     def generate(self):
         if self.options.dnn:
@@ -447,7 +452,7 @@ class OpenCVConan(ConanFile):
             tc.variables["CMAKE_CXX_STANDARD"] = 11
         tc.variables["WITH_EIGEN"] = self.options.with_eigen
         tc.variables["HAVE_QUIRC"] = self.options.with_quirc  # force usage of quirc requirement
-        tc.variables["WITH_DSHOW"] = is_msvc(self)
+        tc.variables["WITH_DSHOW"] = is_msvc(self) and not self.settings.os == "WindowsStore"
         tc.variables["WITH_MSMF"] = self.options.get_safe("with_msmf", False)
         tc.variables["WITH_MSMF_DXVA"] = self.options.get_safe("with_msmf_dxva", False)
         tc.variables["OPENCV_MODULES_PUBLIC"] = "opencv"
@@ -504,7 +509,10 @@ class OpenCVConan(ConanFile):
 
         tc.generate()
 
-        CMakeDeps(self).generate()
+        deps = CMakeDeps(self)
+        # @todo: windows store builds with static zlib fail since it tries to find "z.lib" instead of "zlib.lib"
+        # actually zlib is incorrect for WindowsStore
+        deps.generate()
 
     def build(self):
         self._patch_sources()
