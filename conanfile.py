@@ -697,9 +697,12 @@ class OpenCVConan(ConanFile):
             if self.version >= "4.3.0":
                 opencv_components.extend([
                     {"target": "opencv_intensity_transform", "lib": "intensity_transform", "requires": ["opencv_core", "opencv_imgproc"] + eigen() + ipp()},
-                    {"target": "opencv_alphamat",            "lib": "alphamat",            "requires": ["opencv_core", "opencv_imgproc"] + eigen() + ipp()},
                     {"target": "opencv_rapid",               "lib": "rapid",               "requires": ["opencv_core", "opencv_flann", "opencv_imgproc", "opencv_features2d", "opencv_calib3d"] + eigen() + ipp()},
                 ])
+                if self.options.with_eigen:
+                    opencv_components.extend([
+                        {"target": "opencv_alphamat",            "lib": "alphamat",            "requires": ["opencv_core", "opencv_imgproc"] + eigen() + ipp()},
+                    ])
 
             if self.options.get_safe("contrib_freetype"):
                 opencv_components.extend([
