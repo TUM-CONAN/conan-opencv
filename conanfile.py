@@ -132,13 +132,17 @@ class OpenCVConan(ConanFile):
     def export_sources(self):
         export_conandata_patches(self)
 
+    @property 
+    def _is_windows(self):
+        return self.settings.os == "Windows" or self.settings.os == "WindowsStore"
+
     def config_options(self):
-        if self.settings.os == "Windows":
+        if self._is_windows:
             del self.options.fPIC
         if self.settings.os != "Linux":
             del self.options.with_gtk
             del self.options.with_v4l
-        if self.settings.os != "Windows":
+        if not self._is_windows:
             del self.options.with_msmf
             del self.options.with_msmf_dxva
 
@@ -184,7 +188,7 @@ class OpenCVConan(ConanFile):
         cmake_layout(self, src_folder="src")
 
     def requirements(self):
-        self.requires("zlib/1.2.13")
+        self.requires("zlib/1.3@camposs/stable")
         if self.options.with_jpeg == "libjpeg":
             self.requires("libjpeg/9e")
         elif self.options.with_jpeg == "libjpeg-turbo":
@@ -405,7 +409,7 @@ class OpenCVConan(ConanFile):
             tc.variables["WITH_IPP"] = True
             if self.options.with_ipp == "intel-ipp":
                 ipp_root = self.dependencies["intel-ipp"].package_folder.replace("\\", "/")
-                if self.settings.os == "Windows":
+                if self._is_windows:
                     ipp_root = ipp_root.replace("\\", "/")
                 tc.variables["IPPROOT"] = ipp_root
                 tc.variables["IPPIWROOT"] = ipp_root
@@ -742,8 +746,8 @@ class OpenCVConan(ConanFile):
 
     def package_info(self):
         version = self.version.split(".")
-        version = "".join(version) if self.settings.os == "Windows" else ""
-        debug = "d" if self.settings.build_type == "Debug" and self.settings.os == "Windows" else ""
+        version = "".join(version) if self._is_windows else ""
+        debug = "d" if self.settings.build_type == "Debug" and self._is_windows else ""
 
         def get_lib_name(module):
             if module == "ippiw":
@@ -765,8 +769,8 @@ class OpenCVConan(ConanFile):
                 self.cpp_info.components[conan_component].set_property("cmake_target_name", cmake_target)
                 self.cpp_info.components[conan_component].libs = [lib_name]
                 if lib_name.startswith("ippiw"):
-                    self.cpp_info.components[conan_component].libs.append("ippicvmt" if self.settings.os == "Windows" else "ippicv")
-                if self.settings.os != "Windows":
+                    self.cpp_info.components[conan_component].libs.append("ippicvmt" if self._is_windows else "ippicv")
+                if not self._is_windows:
                     self.cpp_info.components[conan_component].includedirs.append(os.path.join("include", "opencv4"))
                 self.cpp_info.components[conan_component].requires = requires
                 if self.settings.os == "Linux":
@@ -802,7 +806,7 @@ class OpenCVConan(ConanFile):
 
         self.cpp_info.includedirs.append(os.path.join("include", "opencv4"))
 
-        if self.settings.os == "Windows":
+        if self._is_windows:
             self.cpp_info.components["opencv_highgui"].system_libs = ["comctl32", "gdi32", "ole32", "setupapi", "ws2_32", "vfw32"]
         elif self.settings.os == "Macos":
             self.cpp_info.components["opencv_highgui"].frameworks = ["Cocoa"]
