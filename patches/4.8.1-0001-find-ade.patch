@@ -1,6 +1,6 @@
 --- a/modules/gapi/cmake/init.cmake
 +++ b/modules/gapi/cmake/init.cmake
-@@ -7,7 +7,7 @@ if(NOT WITH_ADE)
+@@ -8,7 +8,7 @@ if(NOT WITH_ADE)
    return()
  endif()
  

@@ -3,7 +3,7 @@
 @@ -9,21 +9,15 @@
  # OPENEXR_LIBRARIES = libraries that are needed to use OpenEXR.
  #
-
+ 
 -if(NOT OPENCV_SKIP_OPENEXR_FIND_PACKAGE)
 -  find_package(OpenEXR 3 QUIET)
 -  #ocv_cmake_dump_vars(EXR)
@@ -27,6 +27,6 @@
 +set(OPENEXR_FOUND TRUE)
 +set(OPENEXR_VERSION ${OpenEXR_VERSION})
 +return()
-
+ 
  SET(OPENEXR_LIBRARIES "")
  SET(OPENEXR_LIBSEARCH_SUFFIXES "")
