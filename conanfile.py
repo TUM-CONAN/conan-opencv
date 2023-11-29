@@ -1082,7 +1082,7 @@ class OpenCVConan(ConanFile):
 
     def requirements(self):
         # core module dependencies
-        self.requires("zlib/[>=1.2.11 <2]")
+        self.requires("zlib/1.3@camposs/stable")  # this has a patch for building on UWP
         if self.options.with_eigen:
             self.requires("eigen/3.4.0")
         if self.options.parallel == "tbb":
