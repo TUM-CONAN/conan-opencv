@@ -1155,6 +1155,8 @@ class OpenCVConan(ConanFile):
         # text module dependencies
         if self.options.get_safe("with_tesseract"):
             self.requires("tesseract/5.3.0")
+        if self.options.with_cuda:
+            self.requires("cuda_dev_config/2.1@camposs/stable")
 
     def package_id(self):
         # deprecated options
