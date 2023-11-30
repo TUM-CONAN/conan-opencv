@@ -293,14 +293,14 @@ class OpenCVConan(ConanFile):
         export_conandata_patches(self)
 
     def config_options(self):
-        if self.settings.os == "Windows":
+        if self.is_win:
             del self.options.fPIC
         if self.settings.os != "Linux":
             del self.options.with_gtk
             del self.options.with_v4l
         if self.settings.os in ["iOS", "Android"]:
             del self.options.with_opencl
-        if self.settings.os != "Windows":
+        if not self.is_win:
             del self.options.with_msmf
             del self.options.with_msmf_dxva
 
@@ -405,6 +405,10 @@ class OpenCVConan(ConanFile):
         def protobuf():
             return ["protobuf::protobuf"] if self.options.get_safe("with_protobuf") else []
 
+        def protobuf_or_flatbuffers():
+            return ["protobuf::protobuf"] if self.options.get_safe("with_protobuf") else [] + \
+                   ["flatbuffers::flatbuffers"] if self.options.get_safe("with_flatbuffers") else []
+
         def qt():
             return ["qt::qt"] if self.options.get_safe("with_qt") else []
 
@@ -497,7 +501,7 @@ class OpenCVConan(ConanFile):
             "dnn": {
                 "is_built": self.options.dnn,
                 "mandatory_options": ["imgproc"],
-                "requires": ["opencv_core", "opencv_imgproc"] + protobuf() + vulkan() + ipp(),
+                "requires": ["opencv_core", "opencv_imgproc"] + protobuf_or_flatbuffers() + vulkan() + ipp(),
             },
             "features2d": {
                 "is_built": self.options.features2d,
@@ -513,7 +517,7 @@ class OpenCVConan(ConanFile):
                 "mandatory_options": ["imgproc"],
                 "requires": ["opencv_imgproc", "ade::ade"],
                 "system_libs": [
-                    (self.settings.os == "Windows", ["ws2_32", "wsock32"]),
+                    (self.is_win, ["ws2_32", "wsock32"]),
                 ],
             },
             "highgui": {
@@ -522,7 +526,7 @@ class OpenCVConan(ConanFile):
                 "requires": ["opencv_core", "opencv_imgproc"] + opencv_imgcodecs() +
                             opencv_videoio() + gtk() + qt() + xkbcommon() + wayland() + ipp(),
                 "system_libs": [
-                    (self.settings.os == "Windows", ["comctl32", "gdi32", "ole32", "setupapi", "ws2_32", "vfw32"]),
+                    (self.is_win, ["comctl32", "gdi32", "ole32", "setupapi", "ws2_32", "vfw32"]),
                 ],
                 "frameworks": [
                     (self.settings.os == "Macos", ["Cocoa"]),
@@ -1637,6 +1641,10 @@ class OpenCVConan(ConanFile):
         else:
             return Version(gtk_version) < "3.0.0"
 
+    @property
+    def is_win(self):
+        return self.settings.os == "Windows" or self.settings.os == "WindowsStore"
+    
     @staticmethod
     def _cmake_target(module):
         if module in ("ippiw", "correspondence", "multiview", "numeric"):
@@ -1645,14 +1653,14 @@ class OpenCVConan(ConanFile):
 
     def package_info(self):
         version = self.version.split(".")
-        version = "".join(version) if self.settings.os == "Windows" else ""
-        debug = "d" if self.settings.build_type == "Debug" and self.settings.os == "Windows" else ""
+        version = "".join(version) if self.is_win else ""
+        debug = "d" if self.settings.build_type == "Debug" and self.is_win else ""
 
         def get_libs(module):
             if module == "ippiw":
                 return [
                     f"{module}{debug}",
-                    "ippicvmt" if self.settings.os == "Windows" else "ippicv",
+                    "ippicvmt" if self.settings.os == "Windows" else "ippicv",  # what about WindowsStore here??
                 ]
             elif module in ("correspondence", "multiview", "numeric"):
                 return [module]
@@ -1668,7 +1676,7 @@ class OpenCVConan(ConanFile):
                 self.cpp_info.components["opencv_world"].set_property("cmake_target_name", "opencv_world")
                 self.cpp_info.components["opencv_world"].libs = get_libs("world")
                 self.cpp_info.components["opencv_world"].resdirs = ["res"]
-                if self.settings.os != "Windows":
+                if not self.is_win:
                     self.cpp_info.components["opencv_world"].includedirs.append(os.path.join("include", "opencv4"))
                 world_requires = set()
                 world_requires_exclude = set()
@@ -1684,7 +1692,7 @@ class OpenCVConan(ConanFile):
                 # not possible yet in CMakeDeps. See https://github.com/conan-io/conan/issues/10258
                 self.cpp_info.components[conan_component].set_property("cmake_target_name", cmake_target)
                 self.cpp_info.components[conan_component].resdirs = ["res"]
-                if self.settings.os != "Windows":
+                if not self.is_win:
                     self.cpp_info.components[conan_component].includedirs.append(os.path.join("include", "opencv4"))
 
                 module_requires = values.get("requires", [])
