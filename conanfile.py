@@ -20,7 +20,7 @@ required_conan_version = ">=1.54.0"
 
 class OpenCVConan(ConanFile):
     name = "opencv"
-    version = "4.8.0"
+    version = "4.9.0"
     license = "Apache-2.0"
     homepage = "https://opencv.org"
     description = "OpenCV (Open Source Computer Vision Library)"
@@ -99,7 +99,7 @@ class OpenCVConan(ConanFile):
         "with_msmf_dxva": True,
         "with_opengl": False,
         "neon": True,
-        "dnn": True,
+        "dnn": False,
         "dnn_cuda": False,
         "cuda_arch_bin": None,
         "cpu_baseline": None,
@@ -127,7 +127,7 @@ class OpenCVConan(ConanFile):
 
     @property
     def _protobuf_version(self):
-        return "3.17.1"
+        return "3.21.12"
 
     def export_sources(self):
         export_conandata_patches(self)
@@ -221,7 +221,7 @@ class OpenCVConan(ConanFile):
         if self.options.with_ipp == "intel-ipp":
             self.requires("intel-ipp/2020")
         if self.options.with_webp:
-            self.requires("libwebp/1.3.1")
+            self.requires("libwebp/1.3.2")
         if self.options.get_safe("contrib_freetype"):
             self.requires("freetype/2.12.1")
             self.requires("harfbuzz/6.0.0")
@@ -233,7 +233,7 @@ class OpenCVConan(ConanFile):
         if self.options.get_safe("with_gtk"):
             self.requires("gtk/system")
         if self.options.dnn:
-            self.requires(f"protobuf/{self._protobuf_version}")
+            self.requires(f"protobuf/{self._protobuf_version}", transitive_libs=True)
         if self.options.with_ade:
             self.requires("ade/0.1.2a")
         if self.options.with_cuda:
