@@ -20,7 +20,7 @@ required_conan_version = ">=1.54.0"
 
 class OpenCVConan(ConanFile):
     name = "opencv"
-    version = "4.9.0"
+    version = "4.10.0"
     license = "Apache-2.0"
     homepage = "https://opencv.org"
     description = "OpenCV (Open Source Computer Vision Library)"
@@ -184,6 +184,7 @@ class OpenCVConan(ConanFile):
         if self.settings.os == "Android":
             self.options.with_openexr = False  # disabled because this forces linkage to libc++_shared.so
 
+
     def layout(self):
         cmake_layout(self, src_folder="src")
 
@@ -237,7 +238,7 @@ class OpenCVConan(ConanFile):
         if self.options.with_ade:
             self.requires("ade/0.1.2a")
         if self.options.with_cuda:
-            self.requires("cuda_dev_config/2.1@camposs/stable")
+            self.requires("cuda_dev_config/2.2@camposs/stable")
 
     def validate(self):
         if self.options.shared and is_msvc(self) and is_msvc_static_runtime(self):
@@ -498,6 +499,11 @@ class OpenCVConan(ConanFile):
             tc.variables["CUDA_NVCC_FLAGS"] = "--expt-relaxed-constexpr"
             if self.options.cuda_arch_bin:
                 tc.variables["CUDA_ARCH_BIN"] = self.options.cuda_arch_bin
+            else:
+               if self.dependencies["cuda_dev_config"].options.cuda_archs:
+                self.output.info("Using CUDA_ARCHS from cuda_dev_config: {}".format(self.dependencies["cuda_dev_config"].options.cuda_archs))
+                tc.variables["CUDA_ARCH_BIN"] = ";".join(str(self.dependencies["cuda_dev_config"].options.cuda_archs).split(","))
+
         tc.variables["WITH_CUBLAS"] = self.options.get_safe("with_cublas", False)
         tc.variables["WITH_CUFFT"] = self.options.get_safe("with_cufft", False)
         tc.variables["WITH_CUDNN"] = self.options.get_safe("with_cudnn", False)
