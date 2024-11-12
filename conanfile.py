@@ -498,6 +498,11 @@ class OpenCVConan(ConanFile):
             tc.variables["CUDA_NVCC_FLAGS"] = "--expt-relaxed-constexpr"
             if self.options.cuda_arch_bin:
                 tc.variables["CUDA_ARCH_BIN"] = self.options.cuda_arch_bin
+            else:
+                if self.dependencies["cuda_dev_config"].options.cuda_archs:
+                    self.output.info("Using CUDA_ARCHS from cuda_dev_config: {}".format(self.dependencies["cuda_dev_config"].options.cuda_archs))
+                    tc.variables["CUDA_ARCH_BIN"] = ";".join(str(self.dependencies["cuda_dev_config"].options.cuda_archs).split(","))
+
         tc.variables["WITH_CUBLAS"] = self.options.get_safe("with_cublas", False)
         tc.variables["WITH_CUFFT"] = self.options.get_safe("with_cufft", False)
         tc.variables["WITH_CUDNN"] = self.options.get_safe("with_cudnn", False)
