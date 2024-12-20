@@ -59,6 +59,7 @@ class OpenCVConan(ConanFile):
         "with_msmf": [True, False],
         "with_msmf_dxva": [True, False],
         "with_opengl": [True, False],
+        "with_python": [True, False],
         "neon": [True, False],
         "dnn": [True, False],
         "dnn_cuda": [True, False],
@@ -98,6 +99,7 @@ class OpenCVConan(ConanFile):
         "with_msmf": True,
         "with_msmf_dxva": True,
         "with_opengl": False,
+        "with_python": False,
         "neon": True,
         "dnn": True,
         "dnn_cuda": False,
@@ -127,7 +129,7 @@ class OpenCVConan(ConanFile):
 
     @property
     def _protobuf_version(self):
-        return "3.17.1"
+        return "3.21.12"
 
     def export_sources(self):
         export_conandata_patches(self)
@@ -213,7 +215,7 @@ class OpenCVConan(ConanFile):
             self.requires("eigen/3.4.0")
         if self.options.get_safe("with_ffmpeg"):
             # opencv doesn't support ffmpeg >= 5.0.0 for the moment (until 4.5.5 at least)
-            self.requires("ffmpeg/6.1@camposs/stable")
+            self.requires("ffmpeg/6.1.1@camposs/stable", transitive_headers=True, transitive_libs=True)
             # pulseaudio currently causes a conflict here
             self.requires("openssl/1.1.1t", override=True)
         if self.options.parallel == "tbb":
@@ -238,6 +240,8 @@ class OpenCVConan(ConanFile):
             self.requires("ade/0.1.2a")
         if self.options.with_cuda:
             self.requires("cuda_dev_config/2.1@camposs/stable")
+        if self.options.with_python:
+            self.requires("python_dev_config/1.1@camposs/stable")
 
     def validate(self):
         if self.options.shared and is_msvc(self) and is_msvc_static_runtime(self):
@@ -294,7 +298,7 @@ class OpenCVConan(ConanFile):
             # OpenCV expects to find FindProtobuf.cmake, not the config file
             replace_in_file(self, find_protobuf,
                             "find_package(Protobuf QUIET)",
-                            "find_package(Protobuf REQUIRED MODULE)")
+                            "find_package(Protobuf REQUIRED CONFIG)")
             # in 'if' block, get_target_property() produces an error
             if Version(self.version) >= "4.4.0":
                 replace_in_file(self, find_protobuf,
@@ -370,10 +374,10 @@ class OpenCVConan(ConanFile):
         tc.variables["BUILD_WEBP"] = False
         tc.variables["BUILD_TBB"] = False
         tc.variables["OPENCV_FORCE_3RDPARTY_BUILD"] = False
-        tc.variables["OPENCV_PYTHON_SKIP_DETECTION"] = True
+        tc.variables["OPENCV_PYTHON_SKIP_DETECTION"] = not self.options.with_python
         tc.variables["BUILD_opencv_python2"] = False
         tc.variables["BUILD_opencv_python3"] = False
-        tc.variables["BUILD_opencv_python_bindings_g"] = False
+        tc.variables["BUILD_opencv_python_bindings_g"] = self.options.with_python
         tc.variables["BUILD_opencv_python_tests"] = False
         tc.variables["BUILD_opencv_ts"] = False
 
@@ -521,6 +525,11 @@ class OpenCVConan(ConanFile):
         deps = CMakeDeps(self)
         # @todo: windows store builds with static zlib fail since it tries to find "z.lib" instead of "zlib.lib"
         # actually zlib is incorrect for WindowsStore
+        if self.options.dnn:
+            deps.set_property("protobuf", "cmake_find_mode", "both")
+            deps.set_property("protobuf", "cmake_file_name", "Protobuf")
+            deps.set_property("protobuf", "cmake_target_name", "protobuf::libprotobuf")
+
         deps.generate()
 
     def build(self):
@@ -750,6 +759,11 @@ class OpenCVConan(ConanFile):
             opencv_components.extend([
                 {"target": "opencv_gapi",           "lib": "gapi",              "requires": ["opencv_imgproc", "opencv_calib3d", "opencv_video", "ade::ade"]},
             ])
+
+        # if self.options.with_python:
+        #     opencv_components.extend([
+        #         {"target": "opencv_python", "lib":None, "requires":["python_dev_config::python_dev_config"]},
+        #         ])
 
         return opencv_components
 
