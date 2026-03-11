@@ -210,7 +210,7 @@ class OpenCVConan(ConanFile):
             else:
                 self.requires("openexr/3.1.5")
         if self.options.get_safe("with_tiff"):
-                self.requires("libtiff/4.7.1")
+            self.requires("libtiff/4.7.1")
         if self.options.with_eigen:
             self.requires("eigen/3.4.0")
         if self.options.get_safe("with_ffmpeg"):
@@ -771,7 +771,6 @@ class OpenCVConan(ConanFile):
         version = self.version.split(".")
         version = "".join(version) if self._is_windows else ""
         debug = "d" if self.settings.build_type == "Debug" and self._is_windows else ""
-<<<<<<< HEAD
         android_include_dir = os.path.join("sdk", "native", "jni", "include")
         android_abi_map = {
             "armv7": "armeabi-v7a",
