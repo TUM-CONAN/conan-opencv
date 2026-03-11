@@ -210,7 +210,7 @@ class OpenCVConan(ConanFile):
             else:
                 self.requires("openexr/3.1.5")
         if self.options.get_safe("with_tiff"):
-            self.requires("libtiff/4.5.0")
+                self.requires("libtiff/4.7.1")
         if self.options.with_eigen:
             self.requires("eigen/3.4.0")
         if self.options.get_safe("with_ffmpeg"):
@@ -771,7 +771,32 @@ class OpenCVConan(ConanFile):
         version = self.version.split(".")
         version = "".join(version) if self._is_windows else ""
         debug = "d" if self.settings.build_type == "Debug" and self._is_windows else ""
-        packaged_libs = set(collect_libs(self))
+<<<<<<< HEAD
+        android_include_dir = os.path.join("sdk", "native", "jni", "include")
+        android_abi_map = {
+            "armv7": "armeabi-v7a",
+            "armv8": "arm64-v8a",
+            "x86": "x86",
+            "x86_64": "x86_64",
+        }
+        android_libdirs = None
+        if self.settings.os == "Android":
+            android_abi = android_abi_map.get(str(self.settings.arch))
+            if not android_abi:
+                raise ConanInvalidConfiguration(f"Unsupported Android arch for OpenCV package_info(): {self.settings.arch}")
+            android_libdirs = [os.path.join("sdk", "native", "staticlibs", android_abi), "lib"]
+            packaged_libs = set()
+            for libdir in android_libdirs:
+                full_libdir = os.path.join(self.package_folder, libdir)
+                if not os.path.isdir(full_libdir):
+                    continue
+                for filename in os.listdir(full_libdir):
+                    if filename.startswith("lib") and filename.endswith(".a"):
+                        packaged_libs.add(filename[3:-2])
+                    elif filename.endswith(".lib"):
+                        packaged_libs.add(filename[:-4])
+        else:
+            packaged_libs = set(collect_libs(self))
 
         def get_lib_name(module):
             if module == "ippiw":
@@ -807,7 +832,10 @@ class OpenCVConan(ConanFile):
                 self.cpp_info.components[conan_component].libs = [lib_name]
                 if lib_name.startswith("ippiw"):
                     self.cpp_info.components[conan_component].libs.append("ippicvmt" if self._is_windows else "ippicv")
-                if not self._is_windows:
+                if self.settings.os == "Android":
+                    self.cpp_info.components[conan_component].includedirs = [android_include_dir]
+                    self.cpp_info.components[conan_component].libdirs = android_libdirs
+                elif not self._is_windows:
                     self.cpp_info.components[conan_component].includedirs.append(os.path.join("include", "opencv4"))
                 self.cpp_info.components[conan_component].requires = requires
                 if self.settings.os == "Linux":
@@ -817,6 +845,12 @@ class OpenCVConan(ConanFile):
                     self.cpp_info.components[conan_component].system_libs.append("log")
                     if int(str(self.settings.os.api_level)) > 20:
                         self.cpp_info.components[conan_component].system_libs.append("mediandk")
+                    if conan_component == "opencv_videoio":
+                        self.cpp_info.components[conan_component].system_libs.extend([
+                            "android",
+                            "camera2ndk",
+                            "nativewindow",
+                        ])
 
                 if conan_component == "opencv_core" and not self.options.shared:
                     lib_exclude_filter = "(opencv_|ippi|correspondence|multiview|numeric).*"
@@ -841,7 +875,11 @@ class OpenCVConan(ConanFile):
 
         add_components(self._opencv_components)
 
-        self.cpp_info.includedirs.append(os.path.join("include", "opencv4"))
+        if self.settings.os == "Android":
+            self.cpp_info.includedirs = [android_include_dir]
+            self.cpp_info.libdirs = android_libdirs
+        else:
+            self.cpp_info.includedirs.append(os.path.join("include", "opencv4"))
 
         if self._is_windows:
             self.cpp_info.components["opencv_highgui"].system_libs = ["comctl32", "gdi32", "ole32", "setupapi", "ws2_32", "vfw32"]
@@ -850,4 +888,3 @@ class OpenCVConan(ConanFile):
             self.cpp_info.components["opencv_videoio"].frameworks = ["Cocoa", "Accelerate", "AVFoundation", "CoreGraphics", "CoreMedia", "CoreVideo", "QuartzCore"]
         elif self.settings.os == "iOS":
             self.cpp_info.components["opencv_videoio"].frameworks = ["AVFoundation", "QuartzCore"]
-
