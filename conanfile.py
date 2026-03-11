@@ -771,6 +771,7 @@ class OpenCVConan(ConanFile):
         version = self.version.split(".")
         version = "".join(version) if self._is_windows else ""
         debug = "d" if self.settings.build_type == "Debug" and self._is_windows else ""
+        packaged_libs = set(collect_libs(self))
 
         def get_lib_name(module):
             if module == "ippiw":
@@ -781,12 +782,25 @@ class OpenCVConan(ConanFile):
                 return f"opencv_{module}{version}{debug}"
 
         def add_components(components):
+            packaged_components = []
             for component in components:
+                lib_name = get_lib_name(component["lib"])
+                if lib_name not in packaged_libs:
+                    self.output.warning(f"Skipping missing packaged OpenCV component: {component['target']} ({lib_name})")
+                    continue
+                packaged_components.append(component)
+
+            packaged_targets = {component["target"] for component in packaged_components}
+
+            for component in packaged_components:
                 conan_component = component["target"]
                 cmake_target = component["target"]
                 cmake_component = component["lib"]
                 lib_name = get_lib_name(component["lib"])
-                requires = component["requires"]
+                requires = [
+                    requirement for requirement in component["requires"]
+                    if not requirement.startswith("opencv_") or requirement in packaged_targets
+                ]
                 # TODO: we should also define COMPONENTS names of each target for find_package() but not possible yet in CMakeDeps
                 #       see https://github.com/conan-io/conan/issues/10258
                 self.cpp_info.components[conan_component].set_property("cmake_target_name", cmake_target)
@@ -836,5 +850,4 @@ class OpenCVConan(ConanFile):
             self.cpp_info.components["opencv_videoio"].frameworks = ["Cocoa", "Accelerate", "AVFoundation", "CoreGraphics", "CoreMedia", "CoreVideo", "QuartzCore"]
         elif self.settings.os == "iOS":
             self.cpp_info.components["opencv_videoio"].frameworks = ["AVFoundation", "QuartzCore"]
-
 
