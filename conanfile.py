@@ -190,7 +190,7 @@ class OpenCVConan(ConanFile):
         cmake_layout(self, src_folder="src")
 
     def requirements(self):
-        self.requires("zlib/1.3@camposs/stable")
+        self.requires("zlib/1.3.1")
         if self.options.with_jpeg == "libjpeg":
             self.requires("libjpeg/9e")
         elif self.options.with_jpeg == "libjpeg-turbo":
@@ -239,7 +239,7 @@ class OpenCVConan(ConanFile):
         if self.options.with_ade:
             self.requires("ade/0.1.2a")
         if self.options.with_cuda:
-            self.requires("cuda_dev_config/2.1@camposs/stable")
+            self.requires("cuda_dev_config/2.2@camposs/stable")
         if self.options.with_python:
             self.requires("python_dev_config/1.1@camposs/stable")
 
@@ -601,6 +601,7 @@ class OpenCVConan(ConanFile):
                 components.append("openexr::openexr")
             if self.options.with_webp:
                 components.append("libwebp::libwebp")
+                components.append("libwebp::sharpyuv")
             return components
 
         def eigen():
@@ -651,7 +652,7 @@ class OpenCVConan(ConanFile):
             return ["cuda_dev_config::cuda_dev_config"] if self.options.with_cuda else []
 
         opencv_components = [
-            {"target": "opencv_core",       "lib": "core",       "requires": ["zlib::zlib"] + parallel() + eigen() + ipp()},
+            {"target": "opencv_core",       "lib": "core",       "requires": ["zlib::zlib"] + parallel() + eigen() + ipp() + cuda_sdk()},
             {"target": "opencv_flann",      "lib": "flann",      "requires": ["opencv_core"] + eigen() + ipp()},
             {"target": "opencv_imgproc",    "lib": "imgproc",    "requires": ["opencv_core"] + eigen() + ipp()},
             {"target": "opencv_ml",         "lib": "ml",         "requires": ["opencv_core"] + eigen() + ipp()},
